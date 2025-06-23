@@ -3,7 +3,7 @@ import json
 import streamlit as st
 import numpy as np
 from PIL import Image
-import tflite_runtime.interpreter as tflite
+import tensorflow as tf
 
 # Configuration
 TFLITE_PATH = "models/ea_cnn.tflite"
@@ -18,6 +18,32 @@ st.sidebar.markdown("""
 - Using TensorFlow Lite for better compatibility
 - Drag-and-drop fruit/vegetable image for classification.
 """)
+
+# Display the list of fruits the model can recognize
+st.sidebar.subheader("🍎 Fruits We Can Recognize")
+with open(CLASS_MAP_PATH) as f:
+    class_map = json.load(f)
+    for i in range(len(class_map)):
+        fruit_name = class_map[str(i)]
+        # Add emoji based on fruit name
+        emoji_map = {
+            "Apple": "🍎",
+            "Banana": "🍌", 
+            "Grapefruit": "🍊",
+            "Kiwi": "🥝",
+            "Lemon": "🍋",
+            "Orange": "🍊",
+            "Peach": "🍑",
+            "Pear": "🍐",
+            "Pineapple": "🍍",
+            "Strawberry": "🍓"
+        }
+        emoji = "🍎"  # default
+        for fruit_type, fruit_emoji in emoji_map.items():
+            if fruit_type in fruit_name:
+                emoji = fruit_emoji
+                break
+        st.sidebar.write(f"{emoji} {fruit_name}")
 
 metrics_path = "models/metrics.json"
 if os.path.exists(metrics_path):
@@ -40,7 +66,7 @@ if not os.path.exists(CLASS_MAP_PATH):
 
 @st.cache_resource
 def load_model():
-    interpreter = tflite.Interpreter(model_path=TFLITE_PATH)
+    interpreter = tf.lite.Interpreter(model_path=TFLITE_PATH)
     interpreter.allocate_tensors()
     return interpreter
 
@@ -80,7 +106,6 @@ if file:
     pred_conf = float(np.max(preds))
     
     st.image(img, caption=f"Prediction: {pred_label} ({pred_conf:.2%})", use_column_width=False)
-    st.bar_chart({"Class": top5_labels, "Confidence": top5_scores})
     
     if st.button("Explain (LIME)"):
         try:
