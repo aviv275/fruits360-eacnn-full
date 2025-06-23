@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import tensorflow as tf  # noqa: F401
 from src.config import MODEL_DIR, TFLITE_PATH
 
