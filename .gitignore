@@ -65,7 +65,6 @@ coverage.xml
 /data/fruits-360-mini-small/
 logs/
 models/ea_cnn_savedmodel/
-models/ea_cnn.tflite
 models/metrics.json
 
 # Streamlit
