@@ -6,9 +6,9 @@ from PIL import Image
 import tensorflow as tf
 from src.config import TFLITE_PATH, IMG_SIZE, CLASS_MAP_PATH
 
-st.set_page_config(page_title="Fruits-360 EA-CNN", layout="wide")
+st.set_page_config(page_title="Fruits-360 EA-CNN (TFLite)", layout="wide")
 
-st.sidebar.title("Fruits-360 EA-CNN")
+st.sidebar.title("Fruits-360 EA-CNN (TFLite)")
 st.sidebar.markdown("""
 - Enhanced-Attention CNN ([DOI 10.1016/j.heliyon.2024.e28006](https://doi.org/10.1016/j.heliyon.2024.e28006))
 - Using TensorFlow Lite for better compatibility
@@ -46,7 +46,7 @@ class_map = load_class_map()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
-st.title("🍎 Fruits-360 Classifier (EA-CNN)")
+st.title("🍎 Fruits-360 Classifier (EA-CNN - TFLite)")
 file = st.file_uploader("Upload a JPG/PNG image", type=["jpg", "jpeg", "png"])
 
 if file:
