@@ -1,0 +1,9 @@
+IMG_SIZE: tuple[int, int] = (100, 100)
+BATCH_SZ: int = 4
+EPOCHS: int = 10
+LR: float = 1e-4
+DATA_DIR: str = 'data/raw/fruits-360-mini-small/'
+LOG_DIR: str = 'logs/'
+MODEL_DIR: str = 'models/ea_cnn_savedmodel/'
+TFLITE_PATH: str = 'models/ea_cnn.tflite'
+CLASS_MAP_PATH: str = 'app/class_mapping.json' 
