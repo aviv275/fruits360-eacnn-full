@@ -4,7 +4,11 @@ import streamlit as st
 import numpy as np
 from PIL import Image
 import tflite_runtime.interpreter as tflite
-from src.config import TFLITE_PATH, IMG_SIZE, CLASS_MAP_PATH
+
+# Configuration
+TFLITE_PATH = "models/ea_cnn.tflite"
+IMG_SIZE = (100, 100)
+CLASS_MAP_PATH = "app/class_mapping.json"
 
 st.set_page_config(page_title="Fruits-360 EA-CNN", layout="wide")
 
@@ -24,8 +28,14 @@ if os.path.exists(metrics_path):
 else:
     st.sidebar.info("Run `make evaluate` to see metrics here.")
 
+# Check if TFLite model exists
 if not os.path.exists(TFLITE_PATH):
     st.error("TFLite model not found. Please run: `python3 models/convert_tflite.py`")
+    st.stop()
+
+# Check if class mapping exists
+if not os.path.exists(CLASS_MAP_PATH):
+    st.error("Class mapping not found. Please ensure app/class_mapping.json exists.")
     st.stop()
 
 @st.cache_resource
@@ -73,9 +83,14 @@ if file:
     st.bar_chart({"Class": top5_labels, "Confidence": top5_scores})
     
     if st.button("Explain (LIME)"):
-        from src.lime_visualise import explain
-        # Save uploaded file to disk for LIME
-        temp_path = "app/temp_uploaded_image.png"
-        img.save(temp_path)
-        explain(temp_path, "app/overlay.png")
-        st.image("app/overlay.png", caption="LIME Explanation", use_column_width=False) 
+        try:
+            from src.lime_visualise import explain
+            # Save uploaded file to disk for LIME
+            temp_path = "app/temp_uploaded_image.png"
+            img.save(temp_path)
+            explain(temp_path, "app/overlay.png")
+            st.image("app/overlay.png", caption="LIME Explanation", use_column_width=False)
+        except ImportError:
+            st.warning("LIME explanation not available in this deployment.")
+        except Exception as e:
+            st.error(f"Error generating LIME explanation: {str(e)}") 
