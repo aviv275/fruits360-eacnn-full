@@ -7,14 +7,16 @@ import tensorflow as tf
 
 # Configuration
 TFLITE_PATH = "models/ea_cnn.tflite"
-IMG_SIZE = (100, 100)
+IMG_SIZE = (64, 64)
 CLASS_MAP_PATH = "app/class_mapping.json"
 
 st.set_page_config(page_title="Fruits-360 EA-CNN", layout="wide")
 
 st.sidebar.title("Fruits-360 EA-CNN")
 st.sidebar.markdown("""
-- Enhanced-Attention CNN ([DOI 10.1016/j.heliyon.2024.e28006](https://doi.org/10.1016/j.heliyon.2024.e28006))
+- **Improved Transfer Learning Model** (10 fruits)
+- Using MobileNetV2 pre-trained on ImageNet
+- Enhanced with strong data augmentation
 - Using TensorFlow Lite for better compatibility
 - Drag-and-drop fruit/vegetable image for classification.
 """)
@@ -29,14 +31,14 @@ with open(CLASS_MAP_PATH) as f:
         emoji_map = {
             "Apple": "🍎",
             "Banana": "🍌", 
-            "Grapefruit": "🍊",
-            "Kiwi": "🥝",
-            "Lemon": "🍋",
             "Orange": "🍊",
-            "Peach": "🍑",
-            "Pear": "🍐",
+            "Strawberry": "🍓",
+            "Grape": "🍇",
+            "Lemon": "🍋",
+            "Mango": "🥭",
             "Pineapple": "🍍",
-            "Strawberry": "🍓"
+            "Tomato": "🍅",
+            "Kiwi": "🥝"
         }
         emoji = "🍎"  # default
         for fruit_type, fruit_emoji in emoji_map.items():
@@ -82,7 +84,7 @@ class_map = load_class_map()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
-st.title("🍎 Fruits-360 Classifier (EA-CNN)")
+st.title("🍎 Improved Fruits Classifier (Transfer Learning - 10 Fruits)")
 file = st.file_uploader("Upload a JPG/PNG image", type=["jpg", "jpeg", "png"])
 
 if file:

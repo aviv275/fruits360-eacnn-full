@@ -3,15 +3,26 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import tensorflow as tf  # noqa: F401
-from src.config import MODEL_DIR, TFLITE_PATH
+
+# Path to the improved transfer learning model and output TFLite model
+KERAS_MODEL_PATH = "models/fast_small_model_transfer_final.h5"
+TFLITE_PATH = "models/ea_cnn.tflite"
 
 def convert():
-    converter = tf.lite.TFLiteConverter.from_saved_model(MODEL_DIR)
+    print(f"Converting improved transfer learning model to TFLite...")
+    
+    # Load the Keras model
+    model = tf.keras.models.load_model(KERAS_MODEL_PATH)
+    converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    
     # Float32 export
     tflite_model = converter.convert()
+    
     with open(TFLITE_PATH, 'wb') as f:
         f.write(tflite_model)
+    
     print(f"TFLite model saved to {TFLITE_PATH}")
+    print("This improved model should perform much better!")
 
     # # INT8 quantization (uncomment to use, requires representative dataset)
     # def representative_data_gen():
